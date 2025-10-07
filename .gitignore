@@ -1,0 +1,15 @@
+# Binaries
+/tmp
+/bin
+*.exe
+*.out
+
+# Environment files
+.env
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+note.json
+.dockerignore
