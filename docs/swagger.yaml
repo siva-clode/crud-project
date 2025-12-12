@@ -1,0 +1,187 @@
+basePath: /
+definitions:
+  main.CreateNoteRequest:
+    properties:
+      content:
+        example: Note content here
+        type: string
+      title:
+        example: My Note
+        type: string
+    type: object
+  main.CreateNoteResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      message:
+        example: Note with id 1 has been created
+        type: string
+    type: object
+  store.Note:
+    properties:
+      content:
+        type: string
+      createdat:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedat:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A RESTful API for managing notes
+  title: CRUD Project API
+  version: "1.0"
+paths:
+  /create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new note with title and content
+      parameters:
+      - description: Note to create
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateNoteRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.CreateNoteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new note
+      tags:
+      - notes
+  /delete:
+    delete:
+      description: Delete a note by ID
+      parameters:
+      - description: Note ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted note ID
+          schema:
+            type: integer
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a note
+      tags:
+      - notes
+  /note:
+    get:
+      description: Get a single note by its ID
+      parameters:
+      - description: Note ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/store.Note'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a note by ID
+      tags:
+      - notes
+  /notes:
+    get:
+      description: Get the latest notes (up to 10)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/store.Note'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all notes
+      tags:
+      - notes
+  /update:
+    put:
+      consumes:
+      - application/json
+      description: Update a note's title and content by ID
+      parameters:
+      - description: Note ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: Updated note data
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateNoteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/store.Note'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update an existing note
+      tags:
+      - notes
+swagger: "2.0"

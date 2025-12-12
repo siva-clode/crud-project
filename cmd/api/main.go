@@ -5,11 +5,18 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/dmc0001/crud-project/docs"
 	"github.com/dmc0001/crud-project/internal/database"
 	"github.com/dmc0001/crud-project/internal/env"
 	"github.com/dmc0001/crud-project/internal/store"
 	_ "github.com/lib/pq"
 )
+
+// @title CRUD Project API
+// @version 1.0
+// @description A RESTful API for managing notes
+// @host localhost:8080
+// @BasePath /
 
 type Config struct {
 	Addr         string

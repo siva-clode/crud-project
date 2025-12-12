@@ -8,5 +8,7 @@ RUN go build -o main ./cmd/api
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
+COPY --from=builder /app/internal/migrations ./internal/migrations
+COPY --from=builder /app/docs ./docs
 EXPOSE 8080
 CMD ["./main"]

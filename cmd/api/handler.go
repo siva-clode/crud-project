@@ -12,6 +12,14 @@ import (
 	"github.com/dmc0001/crud-project/internal/store"
 )
 
+// GetNotes godoc
+// @Summary Get all notes
+// @Description Get the latest notes (up to 10)
+// @Tags notes
+// @Produce json
+// @Success 200 {array} store.Note
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /notes [get]
 func (app *Application) GetNotes(w http.ResponseWriter, r *http.Request) {
 	notes, err := app.config.newNoteModel.Latest()
 	if err != nil {
@@ -24,6 +32,17 @@ func (app *Application) GetNotes(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(notes)
 }
 
+// GetNoteById godoc
+// @Summary Get a note by ID
+// @Description Get a single note by its ID
+// @Tags notes
+// @Produce json
+// @Param id query int true "Note ID"
+// @Success 200 {object} store.Note
+// @Failure 400 {string} string "Bad Request"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /note [get]
 func (app *Application) GetNoteById(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -46,6 +65,29 @@ func (app *Application) GetNoteById(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// CreateNoteRequest represents the request body for creating a note
+type CreateNoteRequest struct {
+	Title   string `json:"title" example:"My Note"`
+	Content string `json:"content" example:"Note content here"`
+}
+
+// CreateNoteResponse represents the response after creating a note
+type CreateNoteResponse struct {
+	Message string `json:"message" example:"Note with id 1 has been created"`
+	ID      int    `json:"id" example:"1"`
+}
+
+// InsetNote godoc
+// @Summary Create a new note
+// @Description Create a new note with title and content
+// @Tags notes
+// @Accept json
+// @Produce json
+// @Param note body CreateNoteRequest true "Note to create"
+// @Success 201 {object} CreateNoteResponse
+// @Failure 400 {string} string "Bad Request"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /create [post]
 func (app *Application) InsetNote(w http.ResponseWriter, r *http.Request) {
 	note := &store.Note{}
 	if err := json.NewDecoder(r.Body).Decode(note); err != nil {
@@ -74,6 +116,19 @@ func (app *Application) InsetNote(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// UpdateNote godoc
+// @Summary Update an existing note
+// @Description Update a note's title and content by ID
+// @Tags notes
+// @Accept json
+// @Produce json
+// @Param id query int true "Note ID"
+// @Param note body CreateNoteRequest true "Updated note data"
+// @Success 200 {object} store.Note
+// @Failure 400 {string} string "Bad Request"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /update [put]
 func (app *Application) UpdateNote(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -106,6 +161,16 @@ func (app *Application) UpdateNote(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// DeleteNote godoc
+// @Summary Delete a note
+// @Description Delete a note by ID
+// @Tags notes
+// @Produce json
+// @Param id query int true "Note ID"
+// @Success 200 {integer} int "Deleted note ID"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /delete [delete]
 func (app *Application) DeleteNote(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
